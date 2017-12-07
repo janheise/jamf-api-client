@@ -26,37 +26,7 @@ func main() {
 		log.Printf("failed to fetch computers: %v", err)
 	}
 
-	fmt.Println(computers)
-
-	//req, err := http.NewRequest(http.MethodGet, "https://moneyforward.jamfcloud.com/JSSResource/computerreports/id/1", nil)
-	//
-	//if err != nil {
-	//	log.Printf("failed to form a new request: %v", err)
-	//}
-	//
-	//req.Header.Add("accept", "application/json")
-	//req.Header.Add("authorization", "Basic YXVkaXRlcjpicElVXk9LUzF2NmI=")
-	//
-	//resp, err := http.DefaultClient.Do(req)
-	//defer resp.Body.Close()
-	//
-	//if err != nil {
-	//	log.Printf("failed requesting %v: %err", req, err)
-	//}
-	//
-	//if hoge, err := httputil.DumpResponse(resp, true); err != nil {
-	//	fmt.Println(hoge)
-	//}
-	//
-	//body, err := ioutil.ReadAll(resp.Body)
-	//if err != nil {
-	//	log.Printf("Failed to read response body: %s", resp.Body)
-	//}
-	//
-	//var report jamf.ComputerInfos
-	//if err := json.Unmarshal(body, &report); err != nil {
-	//	log.Println(fmt.Sprintf("Failed to decode json message from slack: %v -> %s",err, body))
-	//} else {
-	//	fmt.Println(report)
-	//}
+	for _, computer := range computers {
+		fmt.Println(fmt.Sprintf("%s, %s", computer.FullName, computer.ComputerName))
+	}
 }

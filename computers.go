@@ -30,7 +30,7 @@ type ComputerService struct {
 	data	interface{}
 }
 
-func (s *ComputerService) GetComputers() (*Computers, error) {
+func (s *ComputerService) GetComputers() ([]Computer, error) {
 	res, err := s.Client.DoGetRequest("/computerreports/id/1")
 
 	if err != nil {
@@ -42,5 +42,5 @@ func (s *ComputerService) GetComputers() (*Computers, error) {
 		return nil, fmt.Errorf("failed decoding response body: %v", err)
 	}
 
-	return computers, err
+	return computers.Computers, err
 }
