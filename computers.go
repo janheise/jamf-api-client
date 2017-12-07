@@ -1,7 +1,7 @@
 package jamf_api
 
 import (
-	//"net/http"
+	"sort"
 	"fmt"
 )
 
@@ -17,6 +17,33 @@ type Computer struct {
 	LastEnrollment               string `json:"Last_Enrollment,omitempty"`
 	LastCheckIn                  string `json:"Last_Check_in,omitempty"`
 	AssetTag                     string `json:"Asset_Tag,omitempty"`
+}
+
+type By func(c1, c2 *Computer) bool
+
+func (by By) Sort(computers []Computer) {
+	cp := &computerSorter{
+		computers:computers,
+		by:by,
+	}
+	sort.Sort(cp)
+}
+
+type computerSorter struct {
+	computers []Computer
+	by func(c1, c2 *Computer) bool
+}
+
+func (s *computerSorter) Len() int {
+	return len(s.computers)
+}
+
+func (s *computerSorter) Swap(i, j int) {
+	s.computers[i], s.computers[j] = s.computers[j], s.computers[i]
+}
+
+func (s *computerSorter) Less(i, j int) bool {
+	return s.by(&s.computers[i], &s.computers[j])
 }
 
 // Computers describe
