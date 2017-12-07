@@ -10,7 +10,7 @@ type Computer struct {
 	// They are default attributes.
 	// Note `,omitempty` is added because attributes may internally changed by Jamf.
 	ComputerName                 string `json:"Computer_Name,omitempty"`
-	FullName                     string `json:"Full_Name,omitempty"`
+	FullName                     string `json:"Full_Name,omitempty"`	// The name of registered person.
 	LastReportedIPAddress        string `json:"Last_Reported_IP_Address,omitempty"`
 	LastInventoryUpdate          string `json:"Last_Inventory_Update,omitempty"`
 	LastICloudBackup             string `json:"Last_iCloud_Backup,omitempty"`
@@ -19,14 +19,33 @@ type Computer struct {
 	AssetTag                     string `json:"Asset_Tag,omitempty"`
 }
 
-type By func(c1, c2 *Computer) bool
+// Computers describe
+type Computers struct {
+	Computers []Computer `json:"computer_reports"`
+}
 
-func (by By) Sort(computers []Computer) {
-	cp := &computerSorter{
+// SortByComputerName sorts computers by Computer Name
+func SortByComputerName(computers []Computer) {
+	swapRule := func(c1 *Computer, c2 *Computer) bool { return c1.FullName < c2.FullName }
+
+	sorter := &computerSorter{
 		computers:computers,
-		by:by,
+		by:swapRule,
 	}
-	sort.Sort(cp)
+
+	sort.Sort(sorter)
+}
+
+// SortByUserName sorts computers by UserName
+func SortByUserName(computers []Computer) {
+	swapRule := func(c1 *Computer, c2 *Computer) bool { return c1.ComputerName < c2.ComputerName }
+
+	sorter := &computerSorter{
+		computers:computers,
+		by:swapRule,
+	}
+
+	sort.Sort(sorter)
 }
 
 type computerSorter struct {
@@ -44,11 +63,6 @@ func (s *computerSorter) Swap(i, j int) {
 
 func (s *computerSorter) Less(i, j int) bool {
 	return s.by(&s.computers[i], &s.computers[j])
-}
-
-// Computers describe
-type Computers struct {
-	Computers []Computer `json:"computer_reports"`
 }
 
 type ComputerService struct {

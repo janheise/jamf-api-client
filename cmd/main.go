@@ -26,13 +26,7 @@ func main() {
 		log.Printf("failed to fetch computers: %v", err)
 	}
 
-	name := func(c1, c2 *jamf.Computer) bool {
-		return c1.FullName < c2.FullName
-	}
-
-	jamf.By(name).Sort(computers)
-	fmt.Println(computers)
-
+	jamf.SortByComputerName(computers)
 	for _, computer := range computers {
 		fmt.Println(fmt.Sprintf("%s, %s", computer.FullName, computer.ComputerName))
 	}
